@@ -9,12 +9,12 @@ const db = new Sequelize(
     dialect: stagingDB.dialect,
     dialectOptions: {
       ssl: {
-        require: false, //
+        require: true, //
         rejectUnauthorized: false, //
       },
       keepAlive: true,
     },
-    ssl: false, //
+    ssl: true, //
     port: stagingDB.port,
     pool: {
       max: 10,

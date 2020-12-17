@@ -35,15 +35,34 @@ class PredictionController {
     }
   }
 
+  static async isRepeatedGuest(email) {
+    try {
+      const result = await ReservationDetail.findAll({
+        where: {
+          email,
+        },
+      });
+      if (typeof result[0] === 'undefined') {
+        return 0;
+      }
+      return 1;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   async prepareForML() {
     try {
       const { body } = this.req;
       const request = body.booking_info;
       const op1 = PredictionController.countPrevCancellation(body.email, true);
       const op2 = PredictionController.countPrevCancellation(body.email, false);
-      const [numPreviousCancellation, numPreviousNotCancellation] = await Promise.all([op1, op2]);
+      const op3 = PredictionController.isRepeatedGuest(body.email);
+      const [numPreviousCancellation, numPreviousNotCancellation, isRepeatedGuest] = await Promise.all([
+        op1, op2, op3]);
       request.previous_cancellations = numPreviousCancellation;
       request.previous_bookings_not_canceled = numPreviousNotCancellation;
+      request.is_repeated_guest = isRepeatedGuest;
       request.assigned_room_type = request.reserved_room_type;
       return request;
     } catch (error) {

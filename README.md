@@ -1,7 +1,6 @@
 # AIB-Node
 Repository for AI for Business final assignment. This is the Node.js component that sends request to Python component using NATS message broker. Companion repo for the ML processing part is: https://github.com/nicholausdy/AIB-Python
 
-This app receives message from API server, process the request, then send the reply back to the API server
 ## Dependencies
 1. Node.js 12
 2. NPM
